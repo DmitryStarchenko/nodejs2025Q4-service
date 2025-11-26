@@ -45,4 +45,11 @@ export class UserService {
     user.updatedAt = +new Date();
     return { message: 'User updated' };
   }
+
+  deleteUser(id: string) {
+    this.getUserById(id);
+    const userIndex = db.findIndex((user) => user.id === id);
+    db.splice(userIndex, 1);
+    return { message: 'User deleted' };
+  }
 }
