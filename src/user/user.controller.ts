@@ -10,6 +10,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from 'src/dto/createUser.dto';
 import { UpdateUserDto } from 'src/dto/updateUser.dto';
+import { showUserData } from 'src/common/utils/showUserData';
 
 @Controller('user')
 export class UserController {
@@ -17,12 +18,12 @@ export class UserController {
 
   @Get()
   getAll() {
-    return this.userService.getAll();
+    return showUserData(this.userService.getAll());
   }
 
   @Get(':id')
   getUserById(@Param('id') id: string) {
-    return this.userService.getUserById(id);
+    return showUserData(this.userService.getUserById(id));
   }
 
   @Post()

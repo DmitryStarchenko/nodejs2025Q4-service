@@ -16,7 +16,7 @@ export class UserService {
     return db;
   }
 
-  getUserById(id: string) {
+  getUserById(id: string): IUser {
     if (!validate(id)) throw new BadRequestException('ID not UUID');
     const user = db.find((user) => user.id === id);
     if (!user) throw new NotFoundException('This user does not exist');

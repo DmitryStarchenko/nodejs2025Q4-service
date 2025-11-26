@@ -6,3 +6,5 @@ export interface IUser {
   createdAt: number;
   updatedAt: number;
 }
+
+export type ResUser = Omit<IUser, 'password'>;
