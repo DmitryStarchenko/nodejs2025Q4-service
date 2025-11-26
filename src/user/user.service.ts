@@ -1,10 +1,12 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { db } from 'src/common/db';
 import { CreateUserDto } from 'src/dto/createUser.dto';
+import { UpdateUserDto } from 'src/dto/updateUser.dto';
 import { IUser } from 'src/types/user';
 import { validate, v4 as uuid } from 'uuid';
 
@@ -32,5 +34,15 @@ export class UserService {
     };
     db.push(user);
     return { message: 'User created' };
+  }
+
+  updateUser(id: string, dto: UpdateUserDto) {
+    const user = this.getUserById(id);
+    if (user.password !== dto.oldPassword)
+      throw new ForbiddenException('Incorrect old password');
+    user.password = dto.newPassword;
+    user.version += 1;
+    user.updatedAt = +new Date();
+    return { message: 'User updated' };
   }
 }
