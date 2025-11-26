@@ -1,11 +1,11 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateUserDto {
-  @IsNotEmpty({ message: 'Login is required' })
+  @IsNotEmpty({ message: 'Bad request. body does not contain required fields' })
   @IsString()
   login: string;
 
-  @IsNotEmpty({ message: 'Password is required' })
+  @IsNotEmpty({ message: 'Bad request. body does not contain required fields' })
   @IsString()
   password: string;
 }

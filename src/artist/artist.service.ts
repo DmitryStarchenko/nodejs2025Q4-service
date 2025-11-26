@@ -16,9 +16,12 @@ export class ArtistService {
   }
 
   getArtistById(id: string): IArtist {
-    if (!validate(id)) throw new BadRequestException('ID not UUID');
+    if (!validate(id))
+      throw new BadRequestException(
+        'Bad request. artistId is invalid (not uuid)',
+      );
     const artist = artistDataBase.find((artist) => artist.id === id);
-    if (!artist) throw new NotFoundException('This artist does not exist');
+    if (!artist) throw new NotFoundException('Artist was not found');
     return artist;
   }
 
@@ -29,20 +32,20 @@ export class ArtistService {
       grammy: dto.grammy,
     };
     artistDataBase.push(artist);
-    return { message: 'Artist created' };
+    return { message: 'Successful operation' };
   }
 
   updateArtist(id: string, dto: UpdateArtistDto) {
     const artist = this.getArtistById(id);
     if (dto.name) artist.name = dto.name;
     if (dto.grammy !== undefined) artist.grammy = dto.grammy;
-    return { message: 'Artist updated' };
+    return { message: 'The artist has been updated' };
   }
 
   deleteArtist(id: string) {
     this.getArtistById(id);
     const artistIndex = artistDataBase.findIndex((artist) => artist.id === id);
     artistDataBase.splice(artistIndex, 1);
-    return { message: 'Artist deleted' };
+    return { message: 'Deleted successfully' };
   }
 }

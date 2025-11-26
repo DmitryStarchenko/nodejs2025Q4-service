@@ -2,10 +2,10 @@ import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateArtistDto {
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Bad request. body does not contain required fields' })
   name: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Bad request. body does not contain required fields' })
   @IsBoolean()
   grammy: boolean;
 }

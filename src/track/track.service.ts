@@ -16,9 +16,12 @@ export class TrackService {
   }
 
   getTrackById(id: string): ITrack {
-    if (!validate(id)) throw new BadRequestException('ID not UUID');
+    if (!validate(id))
+      throw new BadRequestException(
+        'Bad request. trackId is invalid (not uuid)',
+      );
     const track = trackDataBase.find((track) => track.id === id);
-    if (!track) throw new NotFoundException('This track does not exist');
+    if (!track) throw new NotFoundException('Track was not found');
     return track;
   }
 
@@ -31,7 +34,7 @@ export class TrackService {
       duration: dto.duration,
     };
     trackDataBase.push(track);
-    return { message: 'Track created' };
+    return { message: 'Successful operation' };
   }
 
   updateTrack(id: string, dto: UpdateTrackDto) {
@@ -40,13 +43,13 @@ export class TrackService {
     if (dto.artistId) track.artistId = dto.artistId;
     if (dto.albumId) track.albumId = dto.albumId;
     if (dto.duration) track.duration = dto.duration;
-    return { message: 'Track updated' };
+    return track;
   }
 
   deleteTrack(id: string) {
     this.getTrackById(id);
     const trackIndex = trackDataBase.findIndex((track) => track.id === id);
     trackDataBase.splice(trackIndex, 1);
-    return { message: 'Track deleted' };
+    return { message: 'Deleted successfully' };
   }
 }

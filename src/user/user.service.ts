@@ -17,9 +17,12 @@ export class UserService {
   }
 
   getUserById(id: string): IUser {
-    if (!validate(id)) throw new BadRequestException('ID not UUID');
+    if (!validate(id))
+      throw new BadRequestException(
+        'Bad request. userId is invalid (not uuid)',
+      );
     const user = userDataBase.find((user) => user.id === id);
-    if (!user) throw new NotFoundException('This user does not exist');
+    if (!user) throw new NotFoundException('User not found');
     return user;
   }
 
@@ -33,23 +36,23 @@ export class UserService {
       updatedAt: +new Date(),
     };
     userDataBase.push(user);
-    return { message: 'User created' };
+    return { message: 'The user has been created' };
   }
 
   updateUser(id: string, dto: UpdateUserDto) {
     const user = this.getUserById(id);
     if (user.password !== dto.oldPassword)
-      throw new ForbiddenException('Incorrect old password');
+      throw new ForbiddenException('oldPassword is wrong');
     user.password = dto.newPassword;
     user.version += 1;
     user.updatedAt = +new Date();
-    return { message: 'User updated' };
+    return user;
   }
 
   deleteUser(id: string) {
     this.getUserById(id);
     const userIndex = userDataBase.findIndex((user) => user.id === id);
     userDataBase.splice(userIndex, 1);
-    return { message: 'User deleted' };
+    return { message: 'Deletes user by ID' };
   }
 }

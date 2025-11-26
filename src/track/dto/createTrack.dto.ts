@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 
 export class CreateTrackDto {
-  @IsNotEmpty({ message: 'The name field is required' })
+  @IsNotEmpty({ message: 'Bad request. body does not contain required fields' })
   @IsString()
   name: string;
 
@@ -20,7 +20,7 @@ export class CreateTrackDto {
   @IsString()
   albumId: string;
 
-  @IsNotEmpty({ message: 'The name field is required' })
+  @IsNotEmpty({ message: 'Bad request. body does not contain required fields' })
   @IsNumber()
   @IsPositive()
   @IsInt({ message: 'The duration field must be an integer' })

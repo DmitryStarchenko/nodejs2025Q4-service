@@ -16,9 +16,12 @@ export class AlbumService {
   }
 
   getAlbumById(id: string): IAlbum {
-    if (!validate(id)) throw new BadRequestException('ID not UUID');
+    if (!validate(id))
+      throw new BadRequestException(
+        'Bad request. albumId is invalid (not uuid)',
+      );
     const album = albumDataBase.find((album) => album.id === id);
-    if (!album) throw new NotFoundException('This album does not exist');
+    if (!album) throw new NotFoundException('Album was not found');
     return album;
   }
 
@@ -30,7 +33,7 @@ export class AlbumService {
       artistId: dto.artistId ? dto.artistId : null,
     };
     albumDataBase.push(album);
-    return { message: 'Album created' };
+    return { message: 'Album is created' };
   }
 
   updateAlbum(id: string, dto: UpdateAlbumDto) {
@@ -38,13 +41,13 @@ export class AlbumService {
     if (dto.name) album.name = dto.name;
     if (dto.year) album.year = dto.year;
     if (dto.artistId) album.artistId = dto.artistId;
-    return { message: 'Album updated' };
+    return { message: 'The album has been updated' };
   }
 
   deleteAlbum(id: string) {
     this.getAlbumById(id);
     const albumIndex = albumDataBase.findIndex((album) => album.id === id);
     albumDataBase.splice(albumIndex, 1);
-    return { message: 'Album deleted' };
+    return { message: 'Deleted successfully' };
   }
 }
