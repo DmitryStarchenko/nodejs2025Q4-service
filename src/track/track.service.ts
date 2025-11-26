@@ -23,14 +23,14 @@ export class TrackService {
   }
 
   createTrack(dto: CreateTrackDto) {
-    const user: ITrack = {
+    const track: ITrack = {
       id: uuid(),
       name: dto.name,
       artistId: dto.artistId ? dto.artistId : null,
       albumId: dto.albumId ? dto.albumId : null,
       duration: dto.duration,
     };
-    trackDataBase.push(user);
+    trackDataBase.push(track);
     return { message: 'Track created' };
   }
 
