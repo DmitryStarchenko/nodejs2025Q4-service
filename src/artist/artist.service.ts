@@ -17,7 +17,7 @@ export class ArtistService {
 
   getArtistById(id: string): IArtist {
     if (!validate(id)) throw new BadRequestException('ID not UUID');
-    const artist = artistDataBase.find((user) => user.id === id);
+    const artist = artistDataBase.find((artist) => artist.id === id);
     if (!artist) throw new NotFoundException('This artist does not exist');
     return artist;
   }
@@ -29,7 +29,7 @@ export class ArtistService {
       grammy: dto.grammy,
     };
     artistDataBase.push(artist);
-    return { message: 'Track created' };
+    return { message: 'Artist created' };
   }
 
   updateArtist(id: string, dto: UpdateArtistDto) {

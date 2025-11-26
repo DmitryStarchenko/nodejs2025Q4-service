@@ -1,0 +1,50 @@
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { albumDataBase } from 'src/common/db';
+import { IAlbum } from 'src/types/album';
+import { validate, v4 as uuid } from 'uuid';
+import { CreateAlbumDto } from './dto/createAlbum.dto';
+import { UpdateAlbumDto } from './dto/updateAlbum.dto';
+
+@Injectable()
+export class AlbumService {
+  getAll(): IAlbum[] {
+    return albumDataBase;
+  }
+
+  getAlbumById(id: string): IAlbum {
+    if (!validate(id)) throw new BadRequestException('ID not UUID');
+    const album = albumDataBase.find((album) => album.id === id);
+    if (!album) throw new NotFoundException('This album does not exist');
+    return album;
+  }
+
+  createAlbum(dto: CreateAlbumDto) {
+    const album: IAlbum = {
+      id: uuid(),
+      name: dto.name,
+      year: dto.year,
+      artistId: dto.artistId ? dto.artistId : null,
+    };
+    albumDataBase.push(album);
+    return { message: 'Album created' };
+  }
+
+  updateAlbum(id: string, dto: UpdateAlbumDto) {
+    const album = this.getAlbumById(id);
+    if (dto.name) album.name = dto.name;
+    if (dto.year) album.year = dto.year;
+    if (dto.artistId) album.artistId = dto.artistId;
+    return { message: 'Album updated' };
+  }
+
+  deleteAlbum(id: string) {
+    this.getAlbumById(id);
+    const albumIndex = albumDataBase.findIndex((album) => album.id === id);
+    albumDataBase.splice(albumIndex, 1);
+    return { message: 'Album deleted' };
+  }
+}

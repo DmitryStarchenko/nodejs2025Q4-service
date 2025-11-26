@@ -3,6 +3,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
+  IsPositive,
   IsString,
 } from 'class-validator';
 
@@ -21,6 +22,7 @@ export class CreateTrackDto {
 
   @IsNotEmpty({ message: 'The name field is required' })
   @IsNumber()
+  @IsPositive()
   @IsInt({ message: 'The duration field must be an integer' })
   duration: number;
 }

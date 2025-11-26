@@ -17,7 +17,7 @@ export class TrackService {
 
   getTrackById(id: string): ITrack {
     if (!validate(id)) throw new BadRequestException('ID not UUID');
-    const track = trackDataBase.find((user) => user.id === id);
+    const track = trackDataBase.find((track) => track.id === id);
     if (!track) throw new NotFoundException('This track does not exist');
     return track;
   }

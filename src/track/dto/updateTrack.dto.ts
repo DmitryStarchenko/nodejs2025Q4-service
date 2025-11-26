@@ -1,4 +1,10 @@
-import { IsInt, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+} from 'class-validator';
 
 export class UpdateTrackDto {
   @IsOptional()
@@ -14,6 +20,7 @@ export class UpdateTrackDto {
   albumId: string;
 
   @IsOptional()
+  @IsPositive()
   @IsNumber()
   @IsInt({ message: 'The duration field must be an integer' })
   duration: number;

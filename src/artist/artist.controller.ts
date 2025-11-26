@@ -21,22 +21,22 @@ export class ArtistController {
   }
 
   @Get(':id')
-  getTrackById(@Param('id') id: string) {
+  getArtistById(@Param('id') id: string) {
     return this.artistService.getArtistById(id);
   }
 
   @Post()
-  createTrack(@Body() dto: CreateArtistDto) {
+  createArtist(@Body() dto: CreateArtistDto) {
     return this.artistService.createArtist(dto);
   }
 
   @Put(':id')
-  updateTrack(@Param('id') id: string, @Body() dto: UpdateArtistDto) {
+  updateArtist(@Param('id') id: string, @Body() dto: UpdateArtistDto) {
     return this.artistService.updateArtist(id, dto);
   }
 
   @Delete(':id')
-  deleteTrack(@Param('id') id: string) {
+  deleteArtist(@Param('id') id: string) {
     return this.artistService.deleteArtist(id);
   }
 }
