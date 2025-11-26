@@ -30,6 +30,7 @@ components:
       required:
         - id
         - login
+        - password
     Artist:
       type: object
       properties:
@@ -45,6 +46,7 @@ components:
       required:
         - id
         - name
+        - grammy
     Album:
       type: object
       properties:
@@ -64,6 +66,7 @@ components:
       required:
         - id
         - name
+        - year
     Track:
       type: object
       properties:
@@ -158,7 +161,7 @@ paths:
     post:
       tags:
         - Signup
-      security: [ ]
+      security: []
       summary: Signup
       description: Signup a user
       requestBody:
