@@ -8,6 +8,7 @@ import { IAlbum } from 'src/types/album';
 import { validate, v4 as uuid } from 'uuid';
 import { CreateAlbumDto } from './dto/createAlbum.dto';
 import { UpdateAlbumDto } from './dto/updateAlbum.dto';
+import { addId } from 'src/common/utils/addId';
 
 @Injectable()
 export class AlbumService {
@@ -30,7 +31,7 @@ export class AlbumService {
       id: uuid(),
       name: dto.name,
       year: dto.year,
-      artistId: dto.artistId ? dto.artistId : null,
+      artistId: addId(dto.artistId),
     };
     albumDataBase.push(album);
     return { message: 'Album is created' };
