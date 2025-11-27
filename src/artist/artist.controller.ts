@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -26,6 +28,7 @@ export class ArtistController {
   }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   createArtist(@Body() dto: CreateArtistDto) {
     return this.artistService.createArtist(dto);
   }
@@ -36,7 +39,8 @@ export class ArtistController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   deleteArtist(@Param('id') id: string) {
-    return this.artistService.deleteArtist(id);
+    this.artistService.deleteArtist(id);
   }
 }

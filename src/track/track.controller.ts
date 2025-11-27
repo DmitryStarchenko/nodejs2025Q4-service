@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -26,6 +28,7 @@ export class TrackController {
   }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   createTrack(@Body() dto: CreateTrackDto) {
     return this.trackService.createTrack(dto);
   }
@@ -36,7 +39,8 @@ export class TrackController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   deleteTrack(@Param('id') id: string) {
-    return this.trackService.deleteTrack(id);
+    this.trackService.deleteTrack(id);
   }
 }

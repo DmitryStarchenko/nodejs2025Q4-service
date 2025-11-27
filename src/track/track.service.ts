@@ -26,7 +26,7 @@ export class TrackService {
     return track;
   }
 
-  createTrack(dto: CreateTrackDto) {
+  createTrack(dto: CreateTrackDto): ITrack {
     const track: ITrack = {
       id: uuid(),
       name: dto.name,
@@ -35,7 +35,7 @@ export class TrackService {
       duration: dto.duration,
     };
     trackDataBase.push(track);
-    return { message: 'Successful operation' };
+    return track;
   }
 
   updateTrack(id: string, dto: UpdateTrackDto) {
@@ -47,10 +47,9 @@ export class TrackService {
     return track;
   }
 
-  deleteTrack(id: string) {
+  deleteTrack(id: string): void {
     this.getTrackById(id);
     const trackIndex = trackDataBase.findIndex((track) => track.id === id);
     trackDataBase.splice(trackIndex, 1);
-    return { message: 'Deleted successfully' };
   }
 }

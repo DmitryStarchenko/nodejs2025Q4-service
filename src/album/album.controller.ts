@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -26,6 +28,7 @@ export class AlbumController {
   }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   createAlbum(@Body() dto: CreateAlbumDto) {
     return this.albumService.createAlbum(dto);
   }
@@ -36,7 +39,8 @@ export class AlbumController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   deleteAlbum(@Param('id') id: string) {
-    return this.albumService.deleteAlbum(id);
+    this.albumService.deleteAlbum(id);
   }
 }

@@ -27,7 +27,7 @@ export class AlbumService {
     return album;
   }
 
-  createAlbum(dto: CreateAlbumDto) {
+  createAlbum(dto: CreateAlbumDto): IAlbum {
     const album: IAlbum = {
       id: uuid(),
       name: dto.name,
@@ -35,22 +35,21 @@ export class AlbumService {
       artistId: addId(dto.artistId),
     };
     albumDataBase.push(album);
-    return { message: 'Album is created' };
+    return album;
   }
 
-  updateAlbum(id: string, dto: UpdateAlbumDto) {
+  updateAlbum(id: string, dto: UpdateAlbumDto): IAlbum {
     const album = this.getAlbumById(id);
     if (dto.name) album.name = dto.name;
     if (dto.year) album.year = dto.year;
     if (dto.artistId) album.artistId = dto.artistId;
-    return { message: 'The album has been updated' };
+    return album;
   }
 
-  deleteAlbum(id: string) {
+  deleteAlbum(id: string): void {
     this.getAlbumById(id);
     const albumIndex = albumDataBase.findIndex((album) => album.id === id);
     albumDataBase.splice(albumIndex, 1);
     deleteAlbumId(id);
-    return { message: 'Deleted successfully' };
   }
 }

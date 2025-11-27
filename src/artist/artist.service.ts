@@ -26,28 +26,27 @@ export class ArtistService {
     return artist;
   }
 
-  createArtist(dto: CreateArtistDto) {
+  createArtist(dto: CreateArtistDto): IArtist {
     const artist: IArtist = {
       id: uuid(),
       name: dto.name,
       grammy: dto.grammy,
     };
     artistDataBase.push(artist);
-    return { message: 'Successful operation' };
+    return artist;
   }
 
-  updateArtist(id: string, dto: UpdateArtistDto) {
+  updateArtist(id: string, dto: UpdateArtistDto): IArtist {
     const artist = this.getArtistById(id);
     if (dto.name) artist.name = dto.name;
     if (dto.grammy !== undefined) artist.grammy = dto.grammy;
-    return { message: 'The artist has been updated' };
+    return artist;
   }
 
-  deleteArtist(id: string) {
+  deleteArtist(id: string): void {
     this.getArtistById(id);
     const artistIndex = artistDataBase.findIndex((artist) => artist.id === id);
     artistDataBase.splice(artistIndex, 1);
     deleteArtistId(id);
-    return { message: 'Deleted successfully' };
   }
 }
