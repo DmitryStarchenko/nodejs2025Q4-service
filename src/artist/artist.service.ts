@@ -8,6 +8,7 @@ import { IArtist } from 'src/types/artist';
 import { validate, v4 as uuid } from 'uuid';
 import { CreateArtistDto } from './dto/createArtist.dto';
 import { UpdateArtistDto } from './dto/updateArtist.dto';
+import { deleteArtistId } from 'src/common/utils/deleteArtistId';
 
 @Injectable()
 export class ArtistService {
@@ -46,6 +47,7 @@ export class ArtistService {
     this.getArtistById(id);
     const artistIndex = artistDataBase.findIndex((artist) => artist.id === id);
     artistDataBase.splice(artistIndex, 1);
+    deleteArtistId(id);
     return { message: 'Deleted successfully' };
   }
 }

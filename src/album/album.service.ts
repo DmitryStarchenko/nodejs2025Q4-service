@@ -9,6 +9,7 @@ import { validate, v4 as uuid } from 'uuid';
 import { CreateAlbumDto } from './dto/createAlbum.dto';
 import { UpdateAlbumDto } from './dto/updateAlbum.dto';
 import { addId } from 'src/common/utils/addId';
+import { deleteAlbumId } from 'src/common/utils/deleteAlbumId';
 
 @Injectable()
 export class AlbumService {
@@ -49,6 +50,7 @@ export class AlbumService {
     this.getAlbumById(id);
     const albumIndex = albumDataBase.findIndex((album) => album.id === id);
     albumDataBase.splice(albumIndex, 1);
+    deleteAlbumId(id);
     return { message: 'Deleted successfully' };
   }
 }
