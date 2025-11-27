@@ -1,4 +1,4 @@
-import { albumDataBase, trackDataBase } from '../db';
+import { albumDataBase, favoriteDataBase, trackDataBase } from '../db';
 
 export const deleteArtistId = (id: string) => {
   trackDataBase.forEach((track) => {
@@ -7,4 +7,10 @@ export const deleteArtistId = (id: string) => {
   albumDataBase.forEach((album) => {
     if (album.artistId === id) album.artistId = null;
   });
+  const artistIndex = favoriteDataBase.artists.findIndex(
+    (artist) => artist.id === id,
+  );
+  if (artistIndex !== -1) {
+    favoriteDataBase.artists.splice(artistIndex, 1);
+  }
 };

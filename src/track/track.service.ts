@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { trackDataBase } from 'src/common/db';
+import { favoriteDataBase, trackDataBase } from 'src/common/db';
 import { ITrack } from 'src/types/track';
 import { validate, v4 as uuid } from 'uuid';
 import { CreateTrackDto } from './dto/createTrack.dto';
@@ -51,5 +51,11 @@ export class TrackService {
     this.getTrackById(id);
     const trackIndex = trackDataBase.findIndex((track) => track.id === id);
     trackDataBase.splice(trackIndex, 1);
+    const favTrackIndex = favoriteDataBase.tracks.findIndex(
+      (track) => track.id === id,
+    );
+    if (favTrackIndex !== -1) {
+      favoriteDataBase.tracks.splice(favTrackIndex, 1);
+    }
   }
 }

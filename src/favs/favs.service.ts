@@ -29,7 +29,7 @@ export class FavsService {
     return { message: 'Added successfully' };
   }
 
-  deleteTrack(id: string) {
+  deleteTrack(id: string): void {
     if (!validate(id))
       throw new BadRequestException('Bad. trackId is invalid (not uuid)');
     const trackIndex = favoriteDataBase.tracks.findIndex(
@@ -37,7 +37,6 @@ export class FavsService {
     );
     if (trackIndex === -1) throw new NotFoundException('Track was not found');
     favoriteDataBase.tracks.splice(trackIndex, 1);
-    return { message: 'Deleted successfully' };
   }
 
   addAlbum(id: string) {
@@ -50,7 +49,7 @@ export class FavsService {
     return { message: 'Added successfully' };
   }
 
-  deleteAlbum(id: string) {
+  deleteAlbum(id: string): void {
     if (!validate(id))
       throw new BadRequestException('Bad. albumId is invalid (not uuid)');
     const albumIndex = favoriteDataBase.albums.findIndex(
@@ -58,7 +57,6 @@ export class FavsService {
     );
     if (albumIndex === -1) throw new NotFoundException('Album was not found');
     favoriteDataBase.albums.splice(albumIndex, 1);
-    return { message: 'Deleted successfully' };
   }
 
   addArtist(id: string) {
@@ -71,7 +69,7 @@ export class FavsService {
     return { message: 'Added successfully' };
   }
 
-  deleteArtist(id: string) {
+  deleteArtist(id: string): void {
     if (!validate(id))
       throw new BadRequestException('Bad. artistId is invalid (not uuid)');
     const artistIndex = favoriteDataBase.artists.findIndex(
@@ -79,6 +77,5 @@ export class FavsService {
     );
     if (artistIndex === -1) throw new NotFoundException('Artist was not found');
     favoriteDataBase.artists.splice(artistIndex, 1);
-    return { message: 'Deleted successfully' };
   }
 }
