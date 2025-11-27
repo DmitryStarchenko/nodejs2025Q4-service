@@ -5,8 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { userDataBase } from 'src/common/db';
-import { CreateUserDto } from 'src/user/dto/createUser.dto';
-import { UpdateUserDto } from 'src/user/dto/updateUser.dto';
+import { CreateUserDto } from './dto/createUser.dto';
+import { UpdateUserDto } from './dto/updateUser.dto';
 import { IUser } from 'src/types/user';
 import { validate, v4 as uuid } from 'uuid';
 
@@ -26,7 +26,7 @@ export class UserService {
     return user;
   }
 
-  createUser(dto: CreateUserDto) {
+  createUser(dto: CreateUserDto): IUser {
     const user: IUser = {
       id: uuid(),
       login: dto.login,
@@ -36,10 +36,10 @@ export class UserService {
       updatedAt: +new Date(),
     };
     userDataBase.push(user);
-    return { message: 'The user has been created' };
+    return user;
   }
 
-  updateUser(id: string, dto: UpdateUserDto) {
+  updateUser(id: string, dto: UpdateUserDto): IUser {
     const user = this.getUserById(id);
     if (user.password !== dto.oldPassword)
       throw new ForbiddenException('oldPassword is wrong');
@@ -49,10 +49,9 @@ export class UserService {
     return user;
   }
 
-  deleteUser(id: string) {
+  deleteUser(id: string): void {
     this.getUserById(id);
     const userIndex = userDataBase.findIndex((user) => user.id === id);
     userDataBase.splice(userIndex, 1);
-    return { message: 'Deletes user by ID' };
   }
 }
