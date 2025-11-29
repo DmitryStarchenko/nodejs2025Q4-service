@@ -5,12 +5,13 @@ info:
   version: 1.0.0
 
 servers:
-  - url: /api
+  - url: http://localhost:4000
 
 components:
   schemas:
     User:
       type: object
+      description: User object (password field is never returned in responses)
       properties:
         id:
           type: string
@@ -21,15 +22,18 @@ components:
         version:
           type: number
           example: 1
-        createAt:
+        createdAt:
           type: number
           example: 1655000000
-        updateAt:
+        updatedAt:
           type: number
           example: 1655000000
       required:
         - id
         - login
+        - version
+        - createdAt
+        - updatedAt
     Artist:
       type: object
       properties:
@@ -45,6 +49,7 @@ components:
       required:
         - id
         - name
+        - grammy
     Album:
       type: object
       properties:
@@ -64,6 +69,7 @@ components:
       required:
         - id
         - name
+        - year
     Track:
       type: object
       properties:
@@ -158,7 +164,7 @@ paths:
     post:
       tags:
         - Signup
-      security: [ ]
+      security: []
       summary: Signup
       description: Signup a user
       requestBody:
@@ -189,7 +195,7 @@ paths:
           description: Bad request
         409:
           description: Conflict. Login already exists
-  /users:
+  /user:
     get:
       tags:
         - Users
@@ -239,13 +245,14 @@ paths:
           description: Bad request. body does not contain required fields
         401:
           $ref: '#/components/responses/UnauthorizedError'
-  /users/{userId}:
+  /user/{id}:
     parameters:
-      - name: userId
+      - name: id
         in: path
         required: true
         schema:
           type: string
+          format: uuid
     get:
       tags:
         - Users
@@ -305,10 +312,10 @@ paths:
                   version:
                     type: integer
                     example: 2
-                  createAt:
+                  createdAt:
                     type: integer
                     example: 1655000000
-                  updateAt:
+                  updatedAt:
                     type: integer
                     example: 1655999999
         400:
@@ -334,7 +341,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         404:
           description: User not found
-  /tracks:
+  /track:
     get:
       tags:
         - Track
@@ -388,7 +395,7 @@ paths:
           description: Bad request. body does not contain required fields
         401:
           $ref: '#/components/responses/UnauthorizedError'
-  /tracks/{id}:
+  /track/{id}:
     parameters:
       - name: id
         in: path
@@ -492,7 +499,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         404:
           description: Track was not found.
-  /albums:
+  /album:
     get:
       tags:
         - Album
@@ -544,7 +551,7 @@ paths:
           description: Bad request. body does not contain required fields
         401:
           $ref: '#/components/responses/UnauthorizedError'
-  /albums/{id}:
+  /album/{id}:
     parameters:
       - name: id
         in: path
@@ -621,7 +628,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         404:
           description: Album was not found.
-  /artists:
+  /artist:
     get:
       tags:
         - Artist
@@ -668,7 +675,7 @@ paths:
           description: Bad request. body does not contain required fields
         401:
           $ref: '#/components/responses/UnauthorizedError'
-  /artists/{id}:
+  /artist/{id}:
     parameters:
       - name: id
         in: path

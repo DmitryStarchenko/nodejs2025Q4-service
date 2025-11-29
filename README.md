@@ -1,31 +1,88 @@
 # Home Library Service
 
-## Prerequisites
+## Setup and Running
+
+Follow these steps to set up and run the project:
+
+### 1. Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
 
-## Downloading
+### 2. Downloading
 
 ```
 git clone {repository URL}
 ```
 
-## Installing NPM modules
+### 3. Installing NPM modules
 
 ```
 npm install
 ```
 
-## Running application
+### 4. Setting environment variables
+
+Create an <kbd>.env</kbd> file
+
+### 5. Running application
 
 ```
 npm start
 ```
 
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
+## Checking the work
+
+To check, use Postman or something similar.
+
+At this stage, you can create users, tracks, albums, and artists, as well as read, edit, and delete information about them. You can also add and remove tracks, albums, and artists from your favorites.
+
+**Required fields:**
+
+Adding a user:
+
+```
+{
+  login: string;
+  password: string;
+}
+```
+
+User update:
+
+```
+{
+  oldPassword: string;
+  newPassword: string;
+}
+```
+
+Creating a track:
+
+```
+{
+  name: string;
+  duration: number;
+}
+```
+
+Adding a artist:
+
+```
+{
+  name: string;
+  grammy: boolean;
+}
+```
+
+Creating a album:
+
+```
+{
+  name: string;
+  year: number;
+}
+```
 
 ## Testing
 
