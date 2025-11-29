@@ -42,7 +42,7 @@ export class AlbumService {
     const album = this.getAlbumById(id);
     if (dto.name) album.name = dto.name;
     if (dto.year) album.year = dto.year;
-    if (dto.artistId) album.artistId = dto.artistId;
+    if (dto.artistId) album.artistId = addId(dto.artistId);
     return album;
   }
 

@@ -41,8 +41,8 @@ export class TrackService {
   updateTrack(id: string, dto: UpdateTrackDto) {
     const track = this.getTrackById(id);
     if (dto.name) track.name = dto.name;
-    if (dto.artistId) track.artistId = dto.artistId;
-    if (dto.albumId) track.albumId = dto.albumId;
+    if (dto.artistId) track.artistId = addId(dto.artistId);
+    if (dto.albumId) track.albumId = addId(dto.albumId);
     if (dto.duration) track.duration = dto.duration;
     return track;
   }
