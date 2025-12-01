@@ -32,7 +32,7 @@ export class AlbumService {
 
   async createAlbum(dto: CreateAlbumDto): Promise<IAlbum> {
     const artistId = await addId(dto.artistId, 'artist', this.prisma);
-    
+
     const album = await this.prisma.album.create({
       data: {
         id: uuid(),
@@ -46,12 +46,12 @@ export class AlbumService {
 
   async updateAlbum(id: string, dto: UpdateAlbumDto): Promise<IAlbum> {
     await this.getAlbumById(id);
-    
+
     const artistId =
       dto.artistId !== undefined
         ? await addId(dto.artistId, 'artist', this.prisma)
         : undefined;
-    
+
     const album = await this.prisma.album.update({
       where: { id },
       data: {

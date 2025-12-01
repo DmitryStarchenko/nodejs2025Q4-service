@@ -33,7 +33,7 @@ export class TrackService {
   async createTrack(dto: CreateTrackDto): Promise<ITrack> {
     const artistId = await addId(dto.artistId, 'artist', this.prisma);
     const albumId = await addId(dto.albumId, 'album', this.prisma);
-    
+
     const track = await this.prisma.track.create({
       data: {
         id: uuid(),
@@ -48,7 +48,7 @@ export class TrackService {
 
   async updateTrack(id: string, dto: UpdateTrackDto): Promise<ITrack> {
     await this.getTrackById(id);
-    
+
     const artistId =
       dto.artistId !== undefined
         ? await addId(dto.artistId, 'artist', this.prisma)
@@ -57,7 +57,7 @@ export class TrackService {
       dto.albumId !== undefined
         ? await addId(dto.albumId, 'album', this.prisma)
         : undefined;
-    
+
     const track = await this.prisma.track.update({
       where: { id },
       data: {
