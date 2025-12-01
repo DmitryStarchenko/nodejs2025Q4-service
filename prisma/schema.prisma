@@ -32,6 +32,16 @@ model User {
   login     String
   password  String
   version   Int
-  createdAt Int    @unique
-  updatedAt Int    @unique
+  createdAt BigInt @unique
+  updatedAt BigInt @unique
+}
+
+model Favorite {
+  trackId  String?
+  albumId  String?
+  artistId String?
+
+  @@unique([trackId])
+  @@unique([albumId])
+  @@unique([artistId])
 }

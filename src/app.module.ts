@@ -7,13 +7,14 @@ import { ArtistModule } from './artist/artist.module';
 import { AlbumModule } from './album/album.module';
 import { FavsModule } from './favs/favs.module';
 import { ConfigModule } from '@nestjs/config';
-import { PrismaService } from './prisma/prisma.service';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    PrismaModule,
     UserModule,
     TrackModule,
     ArtistModule,
@@ -21,7 +22,6 @@ import { PrismaService } from './prisma/prisma.service';
     FavsModule,
   ],
   controllers: [AppController],
-  providers: [PrismaService, AppService],
-  exports: [PrismaService],
+  providers: [AppService],
 })
 export class AppModule {}

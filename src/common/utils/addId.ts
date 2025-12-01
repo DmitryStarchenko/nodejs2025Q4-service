@@ -1,11 +1,23 @@
-import { albumDataBase, artistDataBase } from '../db';
+import { PrismaService } from 'src/prisma/prisma.service';
 
-export const addId = (id: string) => {
-  const artist = artistDataBase.find((artist) => artist.id === id);
-  const album = albumDataBase.find((album) => album.id === id);
-
-  if (artist || album) {
-    return id;
+export const addId = async (
+  id: string | null | undefined,
+  type: 'artist' | 'album',
+  prisma: PrismaService,
+): Promise<string | null> => {
+  if (!id) {
+    return null;
   }
+
+  if (type === 'artist') {
+    const artist = await prisma.artist.findUnique({ where: { id } });
+    return artist ? id : null;
+  }
+
+  if (type === 'album') {
+    const album = await prisma.album.findUnique({ where: { id } });
+    return album ? id : null;
+  }
+
   return null;
 };

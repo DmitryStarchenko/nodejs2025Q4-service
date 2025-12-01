@@ -18,29 +18,29 @@ export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 
   @Get()
-  getAll() {
+  async getAll() {
     return this.albumService.getAll();
   }
 
   @Get(':id')
-  getAlbumById(@Param('id') id: string) {
+  async getAlbumById(@Param('id') id: string) {
     return this.albumService.getAlbumById(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  createAlbum(@Body() dto: CreateAlbumDto) {
+  async createAlbum(@Body() dto: CreateAlbumDto) {
     return this.albumService.createAlbum(dto);
   }
 
   @Put(':id')
-  updateAlbum(@Param('id') id: string, @Body() dto: UpdateAlbumDto) {
+  async updateAlbum(@Param('id') id: string, @Body() dto: UpdateAlbumDto) {
     return this.albumService.updateAlbum(id, dto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteAlbum(@Param('id') id: string) {
-    this.albumService.deleteAlbum(id);
+  async deleteAlbum(@Param('id') id: string) {
+    await this.albumService.deleteAlbum(id);
   }
 }
