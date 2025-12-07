@@ -1,0 +1,6 @@
+FROM postgres:16-alpine
+
+LABEL maintainer="dololob92@gmail.com"
+LABEL description="Custom PostgreSQL image for Home Library Service"
+
+EXPOSE 5432

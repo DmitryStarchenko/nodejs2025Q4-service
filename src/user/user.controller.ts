@@ -19,29 +19,29 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  getAll() {
-    return showUserData(this.userService.getAll());
+  async getAll() {
+    return showUserData(await this.userService.getAll());
   }
 
   @Get(':id')
-  getUserById(@Param('id') id: string) {
-    return showUserData(this.userService.getUserById(id));
+  async getUserById(@Param('id') id: string) {
+    return showUserData(await this.userService.getUserById(id));
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  createUser(@Body() dto: CreateUserDto) {
-    return showUserData(this.userService.createUser(dto));
+  async createUser(@Body() dto: CreateUserDto) {
+    return showUserData(await this.userService.createUser(dto));
   }
 
   @Put(':id')
-  updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
-    return showUserData(this.userService.updateUser(id, dto));
+  async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+    return showUserData(await this.userService.updateUser(id, dto));
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteUser(@Param('id') id: string) {
-    this.userService.deleteUser(id);
+  async deleteUser(@Param('id') id: string) {
+    await this.userService.deleteUser(id);
   }
 }

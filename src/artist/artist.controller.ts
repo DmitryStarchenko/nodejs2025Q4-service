@@ -18,29 +18,29 @@ export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 
   @Get()
-  getAll() {
+  async getAll() {
     return this.artistService.getAll();
   }
 
   @Get(':id')
-  getArtistById(@Param('id') id: string) {
+  async getArtistById(@Param('id') id: string) {
     return this.artistService.getArtistById(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  createArtist(@Body() dto: CreateArtistDto) {
+  async createArtist(@Body() dto: CreateArtistDto) {
     return this.artistService.createArtist(dto);
   }
 
   @Put(':id')
-  updateArtist(@Param('id') id: string, @Body() dto: UpdateArtistDto) {
+  async updateArtist(@Param('id') id: string, @Body() dto: UpdateArtistDto) {
     return this.artistService.updateArtist(id, dto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteArtist(@Param('id') id: string) {
-    this.artistService.deleteArtist(id);
+  async deleteArtist(@Param('id') id: string) {
+    await this.artistService.deleteArtist(id);
   }
 }
