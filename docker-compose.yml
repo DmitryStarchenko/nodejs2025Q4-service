@@ -2,9 +2,14 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:16-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+    image: dololob92/postgres:latest
     container_name: home-library-db
     restart: unless-stopped
+    ports:
+      - '5432:5432'
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
@@ -15,7 +20,7 @@ services:
     networks:
       - app-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -24,10 +29,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: dololob92/home-library-app:latest
     container_name: home-library-app
     restart: unless-stopped
     ports:
-      - "${PORT:-4000}:4000"
+      - '${PORT:-4000}:4000'
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-home_library}
       PORT: ${PORT:-4000}
