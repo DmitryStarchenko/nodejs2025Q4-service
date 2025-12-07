@@ -37,6 +37,7 @@ model User {
 }
 
 model Favorite {
+  id       String  @id @default(uuid())
   trackId  String?
   albumId  String?
   artistId String?
