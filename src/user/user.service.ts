@@ -9,10 +9,14 @@ import { UpdateUserDto } from './dto/updateUser.dto';
 import { IUser } from 'src/types/user';
 import { validate, v4 as uuid } from 'uuid';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { LoggingService } from 'src/logging/logging.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly loggingService: LoggingService,
+  ) {}
 
   async getAll(): Promise<IUser[]> {
     const users = await this.prisma.user.findMany();
@@ -40,6 +44,10 @@ export class UserService {
   }
 
   async createUser(dto: CreateUserDto): Promise<IUser> {
+    this.loggingService.log(
+      `Creating user with login: ${dto.login}`,
+      'UserService',
+    );
     const now = BigInt(Date.now());
     const user = await this.prisma.user.create({
       data: {
@@ -51,6 +59,10 @@ export class UserService {
         updatedAt: now,
       },
     });
+    this.loggingService.log(
+      `User created successfully with id: ${user.id}`,
+      'UserService',
+    );
     return {
       ...user,
       createdAt: Number(user.createdAt),
