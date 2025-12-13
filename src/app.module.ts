@@ -8,6 +8,7 @@ import { ArtistModule } from './artist/artist.module';
 import { AlbumModule } from './album/album.module';
 import { FavsModule } from './favs/favs.module';
 import { TestModule } from './test/test.module';
+import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { LoggingModule } from './logging/logging.module';
@@ -22,6 +23,7 @@ import { AllExceptionsFilter } from './common/utils/allExceptionsFilter';
     }),
     LoggingModule,
     PrismaModule,
+    AuthModule,
     UserModule,
     TrackModule,
     ArtistModule,
