@@ -8,10 +8,14 @@ import { validate, v4 as uuid } from 'uuid';
 import { CreateArtistDto } from './dto/createArtist.dto';
 import { UpdateArtistDto } from './dto/updateArtist.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { LoggingService } from 'src/logging/logging.service';
 
 @Injectable()
 export class ArtistService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly loggingService: LoggingService,
+  ) {}
 
   async getAll(): Promise<IArtist[]> {
     return this.prisma.artist.findMany();
@@ -53,20 +57,34 @@ export class ArtistService {
   }
 
   async deleteArtist(id: string): Promise<void> {
-    await this.getArtistById(id);
+    try {
+      await this.getArtistById(id);
 
-    await this.prisma.track.updateMany({
-      where: { artistId: id },
-      data: { artistId: null },
-    });
+      await this.prisma.track.updateMany({
+        where: { artistId: id },
+        data: { artistId: null },
+      });
 
-    await this.prisma.album.updateMany({
-      where: { artistId: id },
-      data: { artistId: null },
-    });
+      await this.prisma.album.updateMany({
+        where: { artistId: id },
+        data: { artistId: null },
+      });
 
-    await this.prisma.artist.delete({
-      where: { id },
-    });
+      await this.prisma.artist.delete({
+        where: { id },
+      });
+
+      this.loggingService.log(
+        `Artist deleted successfully: ${id}`,
+        'ArtistService',
+      );
+    } catch (error) {
+      this.loggingService.error(
+        `Error deleting artist with id: ${id}`,
+        error instanceof Error ? error.stack : String(error),
+        'ArtistService',
+      );
+      throw error;
+    }
   }
 }

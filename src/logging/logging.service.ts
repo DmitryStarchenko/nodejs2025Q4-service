@@ -16,12 +16,17 @@ export class LoggingService {
   private readonly logLevel: CustomLogLevel;
   private readonly logToFile: boolean;
   private readonly logDir: string;
+  private readonly maxLogFileSizeKb: number;
 
   constructor(private readonly configService: ConfigService) {
     const level = this.configService.get<string>('LOG_LEVEL', 'LOG');
     this.logLevel = this.getLogLevelFromString(level);
     this.logToFile = this.configService.get<boolean>('LOG_TO_FILE', false);
     this.logDir = this.configService.get<string>('LOG_DIR', 'logs');
+    this.maxLogFileSizeKb = this.configService.get<number>(
+      'MAX_LOG_FILE_SIZE_KB',
+      1024,
+    );
 
     if (this.logToFile) {
       this.ensureLogDirectory();
@@ -71,8 +76,36 @@ export class LoggingService {
     console.log(formattedMessage);
 
     if (this.logToFile) {
-      const logFile = path.join(this.logDir, 'app.log');
-      fs.appendFileSync(logFile, formattedMessage + '\n');
+      this.writeToFile(formattedMessage);
+    }
+  }
+
+  private writeToFile(message: string): void {
+    const logFile = path.join(this.logDir, 'app.log');
+    if (fs.existsSync(logFile)) {
+      const stats = fs.statSync(logFile);
+      const fileSizeKb = stats.size / 1024;
+
+      if (fileSizeKb >= this.maxLogFileSizeKb) {
+        this.rotateLogFile(logFile);
+      }
+    }
+
+    fs.appendFileSync(logFile, message + '\n');
+  }
+
+  private rotateLogFile(logFile: string): void {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const rotatedFile = logFile.replace('.log', `-${timestamp}.log`);
+
+    try {
+      fs.renameSync(logFile, rotatedFile);
+      this.log(
+        `Log file rotated: ${path.basename(rotatedFile)}`,
+        'LogRotation',
+      );
+    } catch (error) {
+      console.error('Failed to rotate log file:', error);
     }
   }
 

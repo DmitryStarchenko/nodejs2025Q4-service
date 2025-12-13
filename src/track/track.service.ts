@@ -9,25 +9,61 @@ import { CreateTrackDto } from './dto/createTrack.dto';
 import { UpdateTrackDto } from './dto/updateTrack.dto';
 import { addId } from 'src/common/utils/addId';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { LoggingService } from 'src/logging/logging.service';
 
 @Injectable()
 export class TrackService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly loggingService: LoggingService,
+  ) {}
 
   async getAll(): Promise<ITrack[]> {
     return this.prisma.track.findMany();
   }
 
   async getTrackById(id: string): Promise<ITrack> {
-    if (!validate(id))
-      throw new BadRequestException(
-        'Bad request. trackId is invalid (not uuid)',
+    try {
+      if (!validate(id)) {
+        this.loggingService.error(
+          `Invalid UUID provided for getTrackById: ${id}`,
+          undefined,
+          'TrackService',
+        );
+        throw new BadRequestException(
+          'Bad request. trackId is invalid (not uuid)',
+        );
+      }
+
+      const track = await this.prisma.track.findUnique({
+        where: { id },
+      });
+
+      if (!track) {
+        this.loggingService.error(
+          `Track not found with id: ${id}`,
+          undefined,
+          'TrackService',
+        );
+        throw new NotFoundException('Track was not found');
+      }
+
+      return track;
+    } catch (error) {
+      if (
+        error instanceof BadRequestException ||
+        error instanceof NotFoundException
+      ) {
+        throw error;
+      }
+
+      this.loggingService.error(
+        `Unexpected error in getTrackById for id: ${id}`,
+        error instanceof Error ? error.stack : String(error),
+        'TrackService',
       );
-    const track = await this.prisma.track.findUnique({
-      where: { id },
-    });
-    if (!track) throw new NotFoundException('Track was not found');
-    return track;
+      throw error;
+    }
   }
 
   async createTrack(dto: CreateTrackDto): Promise<ITrack> {
