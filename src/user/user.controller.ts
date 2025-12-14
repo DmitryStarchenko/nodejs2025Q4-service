@@ -35,6 +35,7 @@ export class UserController {
   }
 
   @Put(':id')
+  @HttpCode(HttpStatus.OK)
   async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
     return showUserData(await this.userService.updateUser(id, dto));
   }

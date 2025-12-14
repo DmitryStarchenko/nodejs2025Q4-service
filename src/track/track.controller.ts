@@ -34,6 +34,7 @@ export class TrackController {
   }
 
   @Put(':id')
+  @HttpCode(HttpStatus.OK)
   async updateTrack(@Param('id') id: string, @Body() dto: UpdateTrackDto) {
     return this.trackService.updateTrack(id, dto);
   }

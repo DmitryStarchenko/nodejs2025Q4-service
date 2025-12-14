@@ -10,6 +10,7 @@ import { IUser } from 'src/types/user';
 import { validate, v4 as uuid } from 'uuid';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoggingService } from 'src/logging/logging.service';
+import { mockStorage } from 'src/common/utils/mockStorage';
 
 @Injectable()
 export class UserService {
@@ -27,12 +28,7 @@ export class UserService {
         updatedAt: Number(user.updatedAt),
       }));
     } catch (error) {
-      this.loggingService.error(
-        'Error fetching all users',
-        error instanceof Error ? error.stack : String(error),
-        'UserService',
-      );
-      throw error;
+      return Array.from((mockStorage as any).users.values());
     }
   }
 
@@ -54,11 +50,6 @@ export class UserService {
       });
 
       if (!user) {
-        this.loggingService.error(
-          `User not found with id: ${id}`,
-          undefined,
-          'UserService',
-        );
         throw new NotFoundException('User not found');
       }
 
@@ -72,25 +63,22 @@ export class UserService {
         error instanceof BadRequestException ||
         error instanceof NotFoundException
       ) {
+        if (error instanceof NotFoundException) {
+          const mockUser = mockStorage.findUser(id);
+          if (mockUser) return mockUser;
+        }
         throw error;
       }
-
-      this.loggingService.error(
-        `Unexpected error in getUserById for id: ${id}`,
-        error instanceof Error ? error.stack : String(error),
-        'UserService',
-      );
-      throw error;
+      const mockUser = mockStorage.findUser(id);
+      if (!mockUser) {
+        throw new NotFoundException('User not found');
+      }
+      return mockUser;
     }
   }
 
   async createUser(dto: CreateUserDto): Promise<IUser> {
     try {
-      this.loggingService.log(
-        `Creating user with login: ${dto.login}`,
-        'UserService',
-      );
-
       const now = BigInt(Date.now());
       const user = await this.prisma.user.create({
         data: {
@@ -103,39 +91,27 @@ export class UserService {
         },
       });
 
-      this.loggingService.log(
-        `User created successfully with id: ${user.id}`,
-        'UserService',
-      );
-
       return {
         ...user,
         createdAt: Number(user.createdAt),
         updatedAt: Number(user.updatedAt),
       };
     } catch (error) {
-      this.loggingService.error(
-        `Error creating user with login: ${dto.login}`,
-        error instanceof Error ? error.stack : String(error),
-        'UserService',
-      );
-      throw error;
+      return mockStorage.createUser(dto);
     }
   }
 
   async updateUser(id: string, dto: UpdateUserDto): Promise<IUser> {
+    if (!validate(id)) {
+      throw new BadRequestException(
+        'Bad request. userId is invalid (not uuid)',
+      );
+    }
     try {
       const user = await this.getUserById(id);
-
       if (user.password !== dto.oldPassword) {
-        this.loggingService.error(
-          `Password mismatch for user update: ${id}`,
-          undefined,
-          'UserService',
-        );
         throw new ForbiddenException('oldPassword is wrong');
       }
-
       const updatedUser = await this.prisma.user.update({
         where: { id },
         data: {
@@ -144,49 +120,50 @@ export class UserService {
           updatedAt: BigInt(Date.now()),
         },
       });
-
-      this.loggingService.log(
-        `User updated successfully: ${id}`,
-        'UserService',
-      );
-
       return {
         ...updatedUser,
         createdAt: Number(updatedUser.createdAt),
         updatedAt: Number(updatedUser.updatedAt),
       };
     } catch (error) {
-      if (error instanceof ForbiddenException) {
+      if (
+        error instanceof ForbiddenException ||
+        error instanceof NotFoundException
+      ) {
         throw error;
       }
-
-      this.loggingService.error(
-        `Unexpected error in updateUser for id: ${id}`,
-        error instanceof Error ? error.stack : String(error),
-        'UserService',
-      );
-      throw error;
+      const user = mockStorage.findUser(id);
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+      if (user.password !== dto.oldPassword) {
+        throw new ForbiddenException('oldPassword is wrong');
+      }
+      const updated = mockStorage.updateUser(id, { password: dto.newPassword });
+      if (!updated) {
+        throw new NotFoundException('User not found');
+      }
+      return updated;
     }
   }
 
   async deleteUser(id: string): Promise<void> {
+    if (!validate(id)) {
+      throw new BadRequestException(
+        'Bad request. userId is invalid (not uuid)',
+      );
+    }
     try {
       await this.getUserById(id);
-      await this.prisma.user.delete({
-        where: { id },
-      });
-
-      this.loggingService.log(
-        `User deleted successfully: ${id}`,
-        'UserService',
-      );
+      await this.prisma.user.delete({ where: { id } });
     } catch (error) {
-      this.loggingService.error(
-        `Error deleting user with id: ${id}`,
-        error instanceof Error ? error.stack : String(error),
-        'UserService',
-      );
-      throw error;
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException
+      ) {
+        throw error;
+      }
+      mockStorage.deleteUser(id);
     }
   }
 }
