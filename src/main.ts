@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
@@ -10,7 +11,10 @@ async function bootstrap() {
 
   setupGlobalErrorHandlers(loggingService);
 
-  await app.listen(process.env.PORT ?? 4000);
+  const port = process.env.PORT ?? 4000;
+  await app.listen(port);
+
+  loggingService.log(`🚀 Server is running on http://localhost:${port}`);
 }
 
 function setupGlobalErrorHandlers(loggingService: LoggingService): void {

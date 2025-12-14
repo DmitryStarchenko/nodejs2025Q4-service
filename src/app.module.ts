@@ -7,7 +7,6 @@ import { TrackModule } from './track/track.module';
 import { ArtistModule } from './artist/artist.module';
 import { AlbumModule } from './album/album.module';
 import { FavsModule } from './favs/favs.module';
-import { TestModule } from './test/test.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
@@ -30,7 +29,6 @@ import { JwtAuthGuard } from './auth/guards';
     ArtistModule,
     AlbumModule,
     FavsModule,
-    TestModule,
   ],
   controllers: [AppController],
   providers: [

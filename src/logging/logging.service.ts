@@ -76,12 +76,20 @@ export class LoggingService {
     console.log(formattedMessage);
 
     if (this.logToFile) {
-      this.writeToFile(formattedMessage);
+      const isError = level === 'ERROR';
+      this.writeToFile(formattedMessage, isError);
+
+      // Also write errors to common log file
+      if (isError) {
+        this.writeToFile(formattedMessage, false);
+      }
     }
   }
 
-  private writeToFile(message: string): void {
-    const logFile = path.join(this.logDir, 'app.log');
+  private writeToFile(message: string, isError = false): void {
+    const fileName = isError ? 'error.log' : 'app.log';
+    const logFile = path.join(this.logDir, fileName);
+
     if (fs.existsSync(logFile)) {
       const stats = fs.statSync(logFile);
       const fileSizeKb = stats.size / 1024;
