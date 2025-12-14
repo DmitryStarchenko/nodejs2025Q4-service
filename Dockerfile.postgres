@@ -1,6 +1,12 @@
 FROM postgres:16-alpine
 
-LABEL maintainer="dololob92@gmail.com"
-LABEL description="Custom PostgreSQL image for Home Library Service"
+# Add any custom PostgreSQL configurations here
+# For example, custom init scripts, extensions, etc.
+
+# Copy custom initialization scripts (if any)
+# COPY ./init-scripts/ /docker-entrypoint-initdb.d/
+
+# Set custom PostgreSQL configuration (if needed)
+# COPY ./postgresql.conf /etc/postgresql/postgresql.conf
 
 EXPOSE 5432

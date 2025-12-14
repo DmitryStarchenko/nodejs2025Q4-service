@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     build:
@@ -33,9 +31,9 @@ services:
     container_name: home-library-app
     restart: unless-stopped
     ports:
-      - '${PORT:-4000}:4000'
+      - '4000:4000'
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-home_library}
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/home_library
       PORT: ${PORT:-4000}
       CRYPT_SALT: ${CRYPT_SALT:-10}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
@@ -49,7 +47,7 @@ services:
         condition: service_healthy
     networks:
       - app-network
-    command: sh -c "DATABASE_URL=$DATABASE_URL npx prisma migrate deploy && npm run start:prod"
+    command: sh -c "DATABASE_URL=postgresql://postgres:postgres@postgres:5432/home_library npx prisma migrate deploy && node dist/main"
 
 networks:
   app-network:

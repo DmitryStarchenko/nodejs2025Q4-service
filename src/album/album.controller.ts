@@ -23,6 +23,7 @@ export class AlbumController {
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   async getAlbumById(@Param('id') id: string) {
     return this.albumService.getAlbumById(id);
   }
@@ -34,6 +35,7 @@ export class AlbumController {
   }
 
   @Put(':id')
+  @HttpCode(HttpStatus.OK)
   async updateAlbum(@Param('id') id: string, @Body() dto: UpdateAlbumDto) {
     return this.albumService.updateAlbum(id, dto);
   }

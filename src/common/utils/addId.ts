@@ -9,14 +9,18 @@ export const addId = async (
     return null;
   }
 
-  if (type === 'artist') {
-    const artist = await prisma.artist.findUnique({ where: { id } });
-    return artist ? id : null;
-  }
+  try {
+    if (type === 'artist') {
+      const artist = await prisma.artist.findUnique({ where: { id } });
+      return artist ? id : null;
+    }
 
-  if (type === 'album') {
-    const album = await prisma.album.findUnique({ where: { id } });
-    return album ? id : null;
+    if (type === 'album') {
+      const album = await prisma.album.findUnique({ where: { id } });
+      return album ? id : null;
+    }
+  } catch {
+    return id;
   }
 
   return null;

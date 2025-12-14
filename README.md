@@ -2,6 +2,48 @@
 
 RESTful API service for managing a home music library with users, tracks, albums, artists, and favorites.
 
+# To check test:auth and test:refresh:
+
+### Local Application with Database in Docker
+
+#### 1. Clone the repository
+
+```bash
+git clone {repository URL}
+cd nodejs2025Q4-service
+```
+
+#### 2. Install dependencies
+
+```bash
+npm install
+```
+
+#### 3. Configure environment variables
+
+```bash
+cp .env.example .env
+```
+
+#### 4. Start PostgreSQL in Docker
+
+```bash
+docker-compose up postgres -d
+```
+
+#### 5. Start the application
+
+```bash
+npm run start:dev
+```
+
+#### 6. Run tests
+
+```bash
+npm run test:auth
+npm run test:refresh
+```
+
 ## Installation and Running
 
 ### Installation via Docker
